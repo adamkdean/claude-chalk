@@ -4,12 +4,12 @@ Instructions for coding agents working in this repository.
 
 ## What this is
 
-claude-color is a Claude Code mod (a plugin of function hooks). It lets Claude
+claude-chalk is a Claude Code mod (a plugin of function hooks). It lets Claude
 colour its own replies in the terminal, using the same template syntax as the
 `chalk-template` npm package: `{red text}`, `{bgRed.white text}`,
 `{#ff8800 text}`.
 
-The plugin's name is `chalk`, not `claude-color`: Claude Code reserves
+The plugin's name is `chalk`, not `claude-chalk`: Claude Code reserves
 plugin names that start with `claude-`. The repository keeps its own name.
 
 It works in two parts:

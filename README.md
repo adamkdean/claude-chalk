@@ -1,4 +1,4 @@
-# claude-color
+# claude-chalk
 
 A Claude Code mod that lets Claude colour its own replies in the terminal.
 
@@ -22,7 +22,7 @@ text stays plain.
 At the prompt of a Claude Code session in a terminal:
 
 ```text
-/plugin install chalk --marketplace adamkdean/claude-color
+/plugin install chalk --marketplace adamkdean/claude-chalk
 ```
 
 Answer `y` to add the marketplace, then choose a scope. The mod is active in
@@ -31,12 +31,12 @@ that session at once.
 From a shell:
 
 ```sh
-claude plugin install chalk --marketplace adamkdean/claude-color
+claude plugin install chalk --marketplace adamkdean/claude-chalk
 ```
 
 In the desktop app, where `/plugin` does not run: click **+** next to the
 prompt box, then **Plugins**, **Add marketplace** with
-`adamkdean/claude-color`, then **Add plugin**.
+`adamkdean/claude-chalk`, then **Add plugin**.
 
 The plugin is named `chalk`, after the npm package whose syntax it uses.
 Claude Code reserves plugin names that start with `claude-`.
