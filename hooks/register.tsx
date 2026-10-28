@@ -37,9 +37,11 @@ Your replies are drawn with colour markup in chalk-template syntax: {style text}
 - Modifiers: bold, dim, italic, underline, inverse, strikethrough.
 - Exact colours: {#ff8800 text}, {#:003366 background}, {#ffffff:cc0000 both}, {rgb(255,136,0) text}, {bgRgb(0,51,102) text}.
 
-Examples: {green ✓ All 42 tests pass}, {red.bold Build failed}, {yellow Warning:} the cache is stale, {bgRed.whiteBright  Delete these 3 files? }.
+Examples: {green ✓ All 42 tests pass}, {red.bold Build failed}, {yellow Warning:} the cache is stale, {bgBlue.whiteBright  Which region should it deploy to? }, {bgRed.whiteBright  Delete these 3 files? }.
 
-Use colour where it helps the reader see something at a glance: red for errors and failures, green for success, yellow for warnings, a background colour for a question that needs an answer, cyan or magenta for names worth spotting. Colour a word, a phrase or a line, and leave most text plain. Do not use white or black text without a background, because the reader's theme can be light or dark.
+Use colour where it helps the reader see something at a glance: red for errors and failures, green for success, yellow for warnings, cyan or magenta for names worth spotting. Colour a word, a phrase or a line, and leave most text plain. Do not use white or black text without a background, because the reader's theme can be light or dark.
+
+When you need an answer or a decision from the reader before you can go on, put that question on its own line on a background colour, so it cannot be missed: bgBlue for an ordinary question, bgRed when the answer allows something risky or hard to undo.
 
 The markup is drawn in your prose only. Inside code spans and code blocks it shows as written, so never put it there, and never in files, commit messages or tool input. Keep each block inside one paragraph. Inside a block, write \\{ and \\} for literal braces.`
 
