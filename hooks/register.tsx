@@ -66,7 +66,7 @@ export const register: Register = on => {
     if (e.surfaces.length === 0) return result
 
     return {
-      sections: [...result.sections, { id: 'color-replies:guide', text: GUIDE, scope: 'session' }],
+      sections: [...result.sections, { id: 'chalk:guide', text: GUIDE, scope: 'session' }],
     }
   })
 

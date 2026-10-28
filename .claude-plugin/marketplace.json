@@ -1,10 +1,10 @@
 {
-  "name": "color-replies",
+  "name": "chalk",
   "owner": { "name": "Adam K Dean" },
   "description": "Colour markup for Claude's replies in the terminal.",
   "plugins": [
     {
-      "name": "color-replies",
+      "name": "chalk",
       "source": "./",
       "description": "Lets Claude colour its replies in the terminal with chalk-style markup."
     }

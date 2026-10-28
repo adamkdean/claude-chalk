@@ -4,7 +4,7 @@ const SURFACES = ['terminal', 'desktop', 'vscode', 'mobile'] as const
 
 function reply(text: string) {
   return {
-    plugin: 'color-replies',
+    plugin: 'chalk',
     component: 'AssistantMessage',
     requestId: 'message-1',
     props: { text, isFirstOfReply: true },

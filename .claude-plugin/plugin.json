@@ -1,5 +1,5 @@
 {
-  "name": "color-replies",
+  "name": "chalk",
   "version": "0.1.0",
   "description": "Lets Claude colour its replies in the terminal with chalk-style markup.",
   "author": { "name": "Adam K Dean" },

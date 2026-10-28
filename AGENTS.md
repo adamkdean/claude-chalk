@@ -9,7 +9,7 @@ colour its own replies in the terminal, using the same template syntax as the
 `chalk-template` npm package: `{red text}`, `{bgRed.white text}`,
 `{#ff8800 text}`.
 
-The plugin's name is `color-replies`, not `claude-color`: Claude Code reserves
+The plugin's name is `chalk`, not `claude-color`: Claude Code reserves
 plugin names that start with `claude-`. The repository keeps its own name.
 
 It works in two parts:

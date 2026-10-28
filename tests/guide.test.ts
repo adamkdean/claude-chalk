@@ -17,7 +17,7 @@ test('the system prompt teaches the markup where a surface draws it', async ($, 
   const { sections } = await $.prompt.compose({ ...INPUT, surfaces: ['terminal'] })
 
   expect(sections[0]).toEqual(BASE)
-  expect(sections[1]?.id).toBe('color-replies:guide')
+  expect(sections[1]?.id).toBe('chalk:guide')
   expect(sections[1]?.scope).toBe('session')
   expect(sections[1]?.text).toContain('{bgRed.whiteBright')
 })
