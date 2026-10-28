@@ -77,16 +77,35 @@ export const register: Register = on => {
     const { Box, Markdown, Text } = $.ui.resolve(e)
     const isTerminal = e.surface === 'terminal'
 
+    const text = (runs: Run[]) => (
+      <Text>
+        {runs.map(run => (
+          <Text {...props(run, isTerminal)}>{run.text}</Text>
+        ))}
+      </Text>
+    )
+
+    // A list item's marker sits in its own column, so wrapped text hangs
+    // under the item as it does in the engine's own lists.
     const body = chunks.map(chunk => (
-      <Box marginTop={chunk.gap ? 1 : 0}>
+      <Box flexDirection="column" marginTop={chunk.gap ? 1 : 0}>
         {chunk.kind === 'markdown' ? (
           <Markdown text={chunk.text} />
         ) : (
-          <Text>
-            {chunk.runs.map(run => (
-              <Text {...props(run, isTerminal)}>{run.text}</Text>
-            ))}
-          </Text>
+          chunk.lines.map(line =>
+            line.marker ? (
+              <Box flexDirection="row">
+                <Box flexShrink={0}>
+                  <Text>{line.marker}</Text>
+                </Box>
+                <Box flexGrow={1} flexShrink={1}>
+                  {text(line.runs)}
+                </Box>
+              </Box>
+            ) : (
+              text(line.runs)
+            ),
+          )
         )}
       </Box>
     ))

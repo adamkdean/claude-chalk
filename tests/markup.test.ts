@@ -1,6 +1,9 @@
 import { expect, test } from 'claude-code/testing'
 
-import { parse, parseStyle, runs } from '../hooks/markup'
+import { lines, parse, parseStyle, type Run } from '../hooks/markup'
+
+// One line of a styled paragraph with no list marker.
+const plain = (...runs: Run[]) => ({ marker: '', runs })
 
 test('style chains read as chalk reads them', async () => {
   expect(parseStyle('red')).toEqual({ color: 'red' })
@@ -44,7 +47,7 @@ test('a paragraph with markup is styled and the rest stays markdown', async () =
     {
       kind: 'styled',
       gap: true,
-      runs: [{ text: 'Is this right?', style: { backgroundColor: 'red', color: 'white' } }],
+      lines: [plain({ text: 'Is this right?', style: { backgroundColor: 'red', color: 'white' } })],
     },
     { kind: 'markdown', text: '- one\n- two', gap: true },
   ])
@@ -57,47 +60,59 @@ test('markdown blocks either side of a fence keep their spacing', async () => {
 })
 
 test('blocks nest, and inner styles add to outer ones', async () => {
-  expect(runs('{bold Hello {red world}!}')).toEqual([
-    { text: 'Hello ', style: { bold: true } },
-    { text: 'world', style: { bold: true, color: 'red' } },
-    { text: '!', style: { bold: true } },
+  expect(lines('{bold Hello {red world}!}')).toEqual([
+    plain(
+      { text: 'Hello ', style: { bold: true } },
+      { text: 'world', style: { bold: true, color: 'red' } },
+      { text: '!', style: { bold: true } },
+    ),
   ])
 })
 
 test('inline markdown inside a styled paragraph is drawn, not shown raw', async () => {
-  expect(runs('{yellow Warning:} **do not** run `rm`, *really*')).toEqual([
-    { text: 'Warning:', style: { color: 'yellow' } },
-    { text: ' ', style: {} },
-    { text: 'do not', style: { bold: true } },
-    { text: ' run ', style: {} },
-    { text: 'rm', style: { code: true } },
-    { text: ', ', style: {} },
-    { text: 'really', style: { italic: true } },
+  expect(lines('{yellow Warning:} **do not** run `rm`, *really*')).toEqual([
+    plain(
+      { text: 'Warning:', style: { color: 'yellow' } },
+      { text: ' ', style: {} },
+      { text: 'do not', style: { bold: true } },
+      { text: ' run ', style: {} },
+      { text: 'rm', style: { code: true } },
+      { text: ', ', style: {} },
+      { text: 'really', style: { italic: true } },
+    ),
   ])
 })
 
 test('a heading line is bold without its marks', async () => {
-  expect(runs('## {cyan Status}')).toEqual([{ text: 'Status', style: { bold: true, color: 'cyan' } }])
+  expect(lines('## {cyan Status}')).toEqual([plain({ text: 'Status', style: { bold: true, color: 'cyan' } })])
 })
 
-test('escaped braces are literal', async () => {
-  expect(runs('{red a \\{b\\} c}')).toEqual([{ text: 'a {b} c', style: { color: 'red' } }])
-})
-
-test('an unclosed block runs to the end of its paragraph', async () => {
-  expect(runs('{red still streaming')).toEqual([{ text: 'still streaming', style: { color: 'red' } }])
-})
-
-test('a stray closing brace is literal', async () => {
-  expect(runs('{red x} and }')).toEqual([
-    { text: 'x', style: { color: 'red' } },
-    { text: ' and }', style: {} },
+test('list items keep their marker apart, so wrapped text can hang under it', async () => {
+  expect(lines('Failures\n- {red auth}: broke\n  * nested\n2. {green ok}')).toEqual([
+    plain({ text: 'Failures', style: {} }),
+    { marker: '- ', runs: [{ text: 'auth', style: { color: 'red' } }, { text: ': broke', style: {} }] },
+    { marker: '  * ', runs: [{ text: 'nested', style: {} }] },
+    { marker: '2. ', runs: [{ text: 'ok', style: { color: 'green' } }] },
   ])
 })
 
-test('lines keep their breaks', async () => {
-  expect(runs('{red one}\ntwo')).toEqual([
-    { text: 'one', style: { color: 'red' } },
-    { text: '\ntwo', style: {} },
+test('escaped braces are literal', async () => {
+  expect(lines('{red a \\{b\\} c}')).toEqual([plain({ text: 'a {b} c', style: { color: 'red' } })])
+})
+
+test('an unclosed block runs to the end of its paragraph', async () => {
+  expect(lines('{red still streaming')).toEqual([plain({ text: 'still streaming', style: { color: 'red' } })])
+})
+
+test('a stray closing brace is literal', async () => {
+  expect(lines('{red x} and }')).toEqual([
+    plain({ text: 'x', style: { color: 'red' } }, { text: ' and }', style: {} }),
+  ])
+})
+
+test('a block carries over a line break', async () => {
+  expect(lines('{red one\ntwo} three')).toEqual([
+    plain({ text: 'one', style: { color: 'red' } }),
+    plain({ text: 'two', style: { color: 'red' } }, { text: ' three', style: {} }),
   ])
 })

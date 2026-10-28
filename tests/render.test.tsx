@@ -45,6 +45,18 @@ test('exact colours pass through unchanged', async ($, on) => {
   }
 })
 
+test('a list item draws its marker apart from its text', async ($, on) => {
+  for (const surface of SURFACES) {
+    const ui = await $.ui.mount({ ...reply('- {red auth/token-refresh}: broke'), surface })
+
+    expect((await ui.find({ type: 'Text', text: /^- $/ }))?.text).toBe('- ')
+    expect((await ui.find({ type: 'Text', text: /^auth\/token-refresh$/ }))?.props).toMatchObject({
+      color: surface === 'terminal' ? 'red' : '#cd0000',
+    })
+    await ui.unmount()
+  }
+})
+
 test('a reply without markup is left to the engine', async ($, on) => {
   // Nothing draws beneath the plugin in a test: this hook stands for the engine.
   on('ui.render', ($, e) => {

@@ -1,5 +1,5 @@
 // Parses chalk-template markup ({red text}, {bgRed.white text}, {#ff8800 text})
-// out of a reply's markdown. Paragraphs that hold markup become styled runs;
+// out of a reply's markdown. Paragraphs that hold markup become styled lines;
 // everything else stays markdown for the engine to draw.
 
 export type Style = {
@@ -17,9 +17,13 @@ export type Style = {
 
 export type Run = { text: string; style: Style }
 
+// One line of a styled paragraph. `marker` is a list item's mark ('- ', '2. ')
+// with its indent, or '' on any other line.
+export type Line = { marker: string; runs: Run[] }
+
 export type Chunk =
   | { kind: 'markdown'; text: string; gap: boolean }
-  | { kind: 'styled'; runs: Run[]; gap: boolean }
+  | { kind: 'styled'; lines: Line[]; gap: boolean }
 
 const COLORS = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
 const NAMES = new Set([...COLORS, ...COLORS.map(c => `${c}Bright`)])
@@ -32,6 +36,7 @@ const HEX_FN = /^(hex|bgHex)\(['"]?(#[0-9a-f]{3,6})['"]?\)$/i
 const FENCE_OPEN = /^ {0,3}(`{3,}|~{3,})/
 const FENCE_CLOSE = /^ {0,3}(`{3,}|~{3,})\s*$/
 const HEADING = /^ {0,3}#{1,6}\s+/
+const LIST = /^ {0,6}(?:[-*+]|\d{1,3}[.)]) +/
 
 function hex(value: string): string | undefined {
   const m = HEX.exec(value)?.[1]
@@ -136,11 +141,12 @@ function hasLater(text: string, from: number, marker: string): boolean {
   return text.indexOf(marker, from) >= 0
 }
 
-// Styled runs for one paragraph, or undefined when it holds no markup. Inline
+// Styled lines for one paragraph, or undefined when it holds no markup. Inline
 // markdown that styled text would otherwise show raw (bold, italic, code,
-// heading marks, backslash escapes) is drawn as the engine would.
-export function runs(text: string): Run[] | undefined {
-  const out: Run[] = []
+// heading marks, list marks, backslash escapes) is drawn as the engine would.
+export function lines(text: string): Line[] | undefined {
+  let line: Line = { marker: '', runs: [] }
+  const out = [line]
   const stack: Style[] = [{}]
   let buffer = ''
   let isBold = false
@@ -155,7 +161,7 @@ export function runs(text: string): Run[] | undefined {
     return style
   }
   const flush = () => {
-    if (buffer) out.push({ text: buffer, style: current() })
+    if (buffer) line.runs.push({ text: buffer, style: current() })
     buffer = ''
   }
 
@@ -166,9 +172,14 @@ export function runs(text: string): Run[] | undefined {
       lineStart = false
       const heading = HEADING.exec(text.slice(i))
       if (heading) {
-        flush()
         isHeading = true
         i += heading[0].length
+        continue
+      }
+      const list = LIST.exec(text.slice(i))
+      if (list) {
+        line.marker = list[0]
+        i += list[0].length
         continue
       }
     }
@@ -191,7 +202,7 @@ export function runs(text: string): Run[] | undefined {
         flush()
         let code = text.slice(i + n, end)
         if (code.length > 2 && code.startsWith(' ') && code.endsWith(' ')) code = code.slice(1, -1)
-        out.push({ text: code, style: { ...current(), code: true } })
+        line.runs.push({ text: code, style: { ...current(), code: true } })
         i = end + n
         continue
       }
@@ -243,6 +254,10 @@ export function runs(text: string): Run[] | undefined {
       flush()
       isHeading = false
       lineStart = true
+      line = { marker: '', runs: [] }
+      out.push(line)
+      i++
+      continue
     }
 
     buffer += ch
@@ -258,17 +273,17 @@ export function runs(text: string): Run[] | undefined {
 export function parse(text: string): Chunk[] | undefined {
   if (!text.includes('{')) return undefined
 
-  const lines = text.split('\n')
+  const rows = text.split('\n')
   const chunks: Chunk[] = []
   let isStyled = false
 
-  for (const block of blocks(lines)) {
-    const source = lines.slice(block.start, block.end + 1).join('\n')
-    const styled = block.isCode ? undefined : runs(source)
+  for (const block of blocks(rows)) {
+    const source = rows.slice(block.start, block.end + 1).join('\n')
+    const styled = block.isCode ? undefined : lines(source)
     const last = chunks[chunks.length - 1]
 
     if (styled) {
-      chunks.push({ kind: 'styled', runs: styled, gap: block.gap })
+      chunks.push({ kind: 'styled', lines: styled, gap: block.gap })
       isStyled = true
     } else if (last?.kind === 'markdown') {
       last.text += (block.gap ? '\n\n' : '\n') + source

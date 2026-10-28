@@ -81,8 +81,8 @@ Claude wrote it.
 - Markup is drawn in prose only. Inside code spans and code blocks it is shown
   as written.
 - A block ends at the end of its paragraph.
-- In a paragraph with markup, bold, italic, inline code and headings are
-  drawn, but list markers and tables are shown as plain text.
+- In a paragraph with markup, bold, italic, inline code, headings and lists
+  are drawn, but tables are shown as plain text.
 - Where the mod is not loaded, the markup is shown as written.
 - The mod API is in early access and can change between Claude Code releases.
   Tested with Claude Code 2.1.312.
