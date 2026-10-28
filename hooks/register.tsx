@@ -96,7 +96,7 @@ export const register: Register = on => {
     return (
       <Box flexDirection="row" marginTop={1}>
         <Box minWidth={2}>
-          <Text>{e.props.isFirstOfReply ? '⏺' : ' '}</Text>
+          <Text color="text">{e.props.isFirstOfReply ? '⏺' : ' '}</Text>
         </Box>
         <Box flexDirection="column" flexGrow={1}>
           {body}
