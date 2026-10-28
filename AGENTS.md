@@ -9,6 +9,9 @@ colour its own replies in the terminal, using the same template syntax as the
 `chalk-template` npm package: `{red text}`, `{bgRed.white text}`,
 `{#ff8800 text}`.
 
+The plugin's name is `color-replies`, not `claude-color`: Claude Code reserves
+plugin names that start with `claude-`. The repository keeps its own name.
+
 It works in two parts:
 
 1. A `prompt.compose` hook adds a short section to the system prompt that
@@ -46,6 +49,17 @@ tsc -p .
 `tsc -p .` needs the engine's types in `.claude-plugin/types/`, which appear
 once Claude Code has loaded the mod (for example with
 `claude --plugin-dir .`).
+
+The tests check the trees the hooks return, not what a terminal paints. After
+a change to drawing, check a real session too: start
+`claude --plugin-dir .` in a pseudo-terminal (`expect` works), ask for a
+coloured reply, capture the raw output and read the SGR escape codes. Compare
+with a session started without the mod for layout (the reply bullet, its
+colour, indents and blank lines).
+
+Colour values must be ones the plugin layer accepts: a chalk name (`red`,
+`redBright`), a theme key, `#rrggbb` or `rgb(r,g,b)`. Forms such as
+`ansi:red` are refused and the whole tree is skipped.
 
 ## Rules
 
