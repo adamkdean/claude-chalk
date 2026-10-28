@@ -28,6 +28,21 @@ function paint(value: string | undefined, isTerminal: boolean): string | undefin
   return XTERM[value]
 }
 
+const GUIDE = `# Colour in replies
+
+Your replies are drawn with colour markup in chalk-template syntax: {style text}. Chain styles with dots, and nest blocks.
+
+- Colours: black, red, green, yellow, blue, magenta, cyan, white, gray, and each of the first eight with a Bright suffix (redBright).
+- Backgrounds: bg and a colour (bgRed, bgBlueBright).
+- Modifiers: bold, dim, italic, underline, inverse, strikethrough.
+- Exact colours: {#ff8800 text}, {#:003366 background}, {#ffffff:cc0000 both}, {rgb(255,136,0) text}, {bgRgb(0,51,102) text}.
+
+Examples: {green ✓ All 42 tests pass}, {red.bold Build failed}, {yellow Warning:} the cache is stale, {bgRed.whiteBright  Delete these 3 files? }.
+
+Use colour where it helps the reader see something at a glance: red for errors and failures, green for success, yellow for warnings, a background colour for a question that needs an answer, cyan or magenta for names worth spotting. Colour a word, a phrase or a line, and leave most text plain. Do not use white or black text without a background, because the reader's theme can be light or dark.
+
+The markup is drawn in your prose only. Inside code spans and code blocks it shows as written, so never put it there, and never in files, commit messages or tool input. Keep each block inside one paragraph. Inside a block, write \\{ and \\} for literal braces.`
+
 // Text props for one run, leaving out what the run does not set.
 function props({ style }: Run, isTerminal: boolean) {
   const out: Record<string, string | boolean> = {}
@@ -45,6 +60,16 @@ function props({ style }: Run, isTerminal: boolean) {
 }
 
 export const register: Register = on => {
+  // Teach the model the markup, unless nothing will draw it (a headless run).
+  on('prompt.compose', async ($, e, next) => {
+    const result = await next(e)
+    if (e.surfaces.length === 0) return result
+
+    return {
+      sections: [...result.sections, { id: 'color-replies:guide', text: GUIDE, scope: 'session' }],
+    }
+  })
+
   on('ui.render', { component: 'AssistantMessage' }, ($, e, next) => {
     const chunks = parse(e.props.text)
     if (!chunks) return next(e)
