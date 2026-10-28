@@ -57,6 +57,16 @@ test('a list item draws its marker apart from its text', async ($, on) => {
   }
 })
 
+test('padding on a background stays with its words, so a wrap leaves no lone coloured cell', async ($, on) => {
+  for (const surface of SURFACES) {
+    const ui = await $.ui.mount({ ...reply('{bgRed.whiteBright  Drop it? } {green  plain }'), surface })
+
+    expect(await ui.find({ type: 'Text', text: /^\u00a0Drop it\?\u00a0$/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /^ plain $/ })).toBeDefined()
+    await ui.unmount()
+  }
+})
+
 test('a reply without markup is left to the engine', async ($, on) => {
   // Nothing draws beneath the plugin in a test: this hook stands for the engine.
   on('ui.render', ($, e) => {

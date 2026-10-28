@@ -79,10 +79,15 @@ export const register: Register = on => {
     const { Box, Markdown, Text } = $.ui.resolve(e)
     const isTerminal = e.surface === 'terminal'
 
+    // Spaces that pad a background are drawn unbreakable, so a wrap carries
+    // them with their words and never leaves one coloured cell on a line.
+    const pad = ({ text, style }: Run) =>
+      style.backgroundColor || style.inverse ? text.replace(/^ +| +$/g, s => '\u00a0'.repeat(s.length)) : text
+
     const text = (runs: Run[]) => (
       <Text>
         {runs.map(run => (
-          <Text {...props(run, isTerminal)}>{run.text}</Text>
+          <Text {...props(run, isTerminal)}>{pad(run)}</Text>
         ))}
       </Text>
     )
