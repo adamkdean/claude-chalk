@@ -171,6 +171,9 @@ changes, including how to check drawing in a real terminal.
 The screenshots are recorded from real sessions in a pseudo-terminal and
 replayed into [xterm.js](https://xtermjs.org) to render them.
 
-## Licence
+## Legal
 
-[MIT](LICENSE)
+Released under the [MIT licence](LICENSE).
+
+An independent project, not made by or affiliated with Anthropic or the chalk
+project.
