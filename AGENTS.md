@@ -33,6 +33,8 @@ The stored transcript keeps the raw markup. Only the drawing changes.
 | `hooks/markup.ts` | Pure parser: text in, styled chunks out |
 | `tests/*.test.ts(x)` | Tests, run by `claude plugin test` |
 | `tsconfig.json` | Extends the engine's config in `.claude-plugin/types/` |
+| `.claude-plugin/icon.png` | Plugin icon, 1024 px square |
+| `assets/` | README banner and screenshots of real sessions |
 
 The engine writes type declarations to `.claude-plugin/types/` when it loads
 the mod. That folder is ignored by git.
@@ -61,6 +63,22 @@ colour, indents and blank lines).
 Colour values must be ones the plugin layer accepts: a chalk name (`red`,
 `redBright`), a theme key, `#rrggbb` or `rgb(r,g,b)`. Forms such as
 `ansi:red` are refused and the whole tree is skipped.
+
+## Screenshots
+
+The images in `assets/screenshots/` are real sessions, never mock-ups:
+
+- Run each prompt in an empty folder, in a clean session:
+  `CLAUDE_CODE_DISABLE_CLAUDE_MDS=1 CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 claude
+  --setting-sources project --no-chrome --strict-mcp-config --plugin-dir <repo>`,
+  so no personal instructions, hooks or status line reach the output. Do not
+  pass `--tools ""`: with no tools the model prints tool calls as text.
+- Prompts describe a situation and never ask for colour (the palette is the
+  one exception), so every colour in an image is the model's own choice.
+- Capture the raw output, replay it into xterm.js and crop to the prompt and
+  the reply. The header and status line show the local path and account.
+- Before an image is committed, read its text for usernames, local paths and
+  anything else private.
 
 ## Rules
 
