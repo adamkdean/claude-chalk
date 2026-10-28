@@ -32,6 +32,7 @@ The stored transcript keeps the raw markup. Only the drawing changes.
 | `hooks/register.tsx` | The hooks: system prompt section and reply drawing |
 | `hooks/markup.ts` | Pure parser: text in, styled chunks out |
 | `tests/*.test.ts(x)` | Tests, run by `claude plugin test` |
+| `tsconfig.json` | Extends the engine's config in `.claude-plugin/types/` |
 
 The engine writes type declarations to `.claude-plugin/types/` when it loads
 the mod. That folder is ignored by git.
