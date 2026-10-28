@@ -66,19 +66,23 @@ Colour values must be ones the plugin layer accepts: a chalk name (`red`,
 
 ## Screenshots
 
-The images in `assets/screenshots/` are real sessions, never mock-ups:
+The images in `assets/screenshots/` show scripted replies, drawn by Claude
+Code and the mod for real:
 
-- Run each prompt in an empty folder, in a clean session:
+- Write each prompt and reply in advance. Every claim in a reply must be true
+  (numbers add up, code runs, commands are valid), and every line meant to
+  stay on one row must fit 85 columns.
+- Play the reply back through a live, clean session in an empty folder:
   `CLAUDE_CODE_DISABLE_CLAUDE_MDS=1 CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 claude
-  --setting-sources project --no-chrome --strict-mcp-config --plugin-dir <repo>`,
-  so no personal instructions, hooks or status line reach the output. Do not
-  pass `--tools ""`: with no tools the model prints tool calls as text.
-- Prompts describe a situation and never ask for colour (the palette is the
-  one exception), so every colour in an image is the model's own choice.
+  --setting-sources project --no-chrome --strict-mcp-config --plugin-dir <repo>
+  --append-system-prompt "<reply with exactly this text: ...>"`, then type the
+  prompt. No personal instructions, hooks or status line reach the output.
 - Capture the raw output, replay it into xterm.js and crop to the prompt and
   the reply. The header and status line show the local path and account.
-- Before an image is committed, read its text for usernames, local paths and
-  anything else private.
+- Check the drawn text against the script word for word, then read each image
+  for usernames, local paths and anything else private.
+- Do not write session files for `--resume`: Claude Code's safety checks treat
+  that as transcript tampering.
 
 ## Rules
 
