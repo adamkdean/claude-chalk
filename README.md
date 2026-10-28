@@ -29,7 +29,7 @@ question it needs answered on a coloured background. The state of things shows
 at a glance, and most text stays plain.
 
 <p align="center">
-  <img src="assets/screenshots/release.png" alt="Claude summarises a release: three items green with ticks, a failed security scan in red, two open items in yellow" width="760">
+  <img src="assets/screenshots/release.png" alt="Claude checks a release: three passing items with green ticks, a failed security scan in red, two open items in yellow, and a question on a blue background" width="760">
 </p>
 
 ## Install
@@ -58,8 +58,9 @@ Claude Code reserves plugin names that start with `claude-`.
 
 ## Examples
 
-Every screenshot below is a real Claude Code session (Sonnet 5.5) with the mod
-loaded. The prompts do not ask for colour: Claude chose every colour itself.
+The replies in these screenshots are scripted to show what the mod can do. Each
+one is played back through a live Claude Code session with the mod loaded, so
+every image shows exactly how the mod draws it.
 
 ### Test runs
 
@@ -71,19 +72,19 @@ Failures stand out from passes, and the coverage gap is easy to spot.
 
 ### Code review
 
-The bug is labelled in red, and the lesser points in yellow.
+Each finding carries its severity on a coloured background.
 
 <p align="center">
-  <img src="assets/screenshots/code-review.png" alt="A code review of an average function: the bug labelled in red, further notes labelled in yellow" width="760">
+  <img src="assets/screenshots/code-review.png" alt="A code review of an average function: findings labelled HIGH on red, MED on yellow and LOW on blue, then a fixed version" width="760">
 </p>
 
 ### Incidents
 
-The root cause is in red and the knock-on effect in yellow, ahead of the
+Service status reads at a glance, and the root cause is in red ahead of the
 detail.
 
 <p align="center">
-  <img src="assets/screenshots/incident.png" alt="Health check triage: the cache outage in red as the primary problem, the queue degradation in yellow as a side effect" width="760">
+  <img src="assets/screenshots/incident.png" alt="Health check triage: green, red and yellow status dots per service, with the cache outage in red as the root cause" width="760">
 </p>
 
 ### Questions that need an answer
@@ -98,7 +99,7 @@ allows something risky or hard to undo.
 
 ## The palette
 
-Every style the mod draws, as Claude showed it when asked for its palette.
+Every style the mod draws.
 
 <p align="center">
   <img src="assets/screenshots/palette.png" alt="The full palette: text colours, bright colours, backgrounds, modifiers, exact hex and RGB colours, and gradients" width="760">
@@ -168,8 +169,9 @@ claude plugin test .       # run the tests in tests/
 [AGENTS.md](AGENTS.md) describes the layout, the checks and the rules for
 changes, including how to check drawing in a real terminal.
 
-The screenshots are recorded from real sessions in a pseudo-terminal and
-replayed into [xterm.js](https://xtermjs.org) to render them.
+The screenshots play scripted replies through a live session in a
+pseudo-terminal, record the output, and replay it into
+[xterm.js](https://xtermjs.org) to render it.
 
 ## Legal
 
