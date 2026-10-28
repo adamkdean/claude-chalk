@@ -41,7 +41,7 @@ At the prompt of a Claude Code session in a terminal:
 ```
 
 Answer `y` to add the marketplace, then choose a scope. The mod is active in
-that session at once, and in every session after it.
+that session at once and, under the user scope, in every session after it.
 
 From a shell:
 
